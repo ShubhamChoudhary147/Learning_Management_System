@@ -11,7 +11,7 @@ import courseProgressRoute from "./routes/courseProgress.route.js";
 
 dotenv.config({});
 
-// call database connection here
+
 connectDB();
 const app = express();
 
@@ -19,12 +19,26 @@ const PORT = process.env.PORT || 3000;
 
 // default middleware
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
-app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true
-}));
+const allowedOrigins = [
+  "https://learningcooll.vercel.app/",
+  "http://localhost:5173"
+];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+}
+app.use(cors(corsOptions));
  
 // apis
 app.use("/api/v1/media", mediaRoute);
