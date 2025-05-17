@@ -13,13 +13,32 @@ const BuyCourseButton = ({ courseId }) => {
   };
 
   useEffect(()=>{
-    if(isSuccess){
-       if(data?.url){
-        window.location.href = data.url; // Redirect to stripe checkout url
-       }else{
-        toast.error("Invalid response from server.")
-       }
-    } 
+    if (isSuccess && data?.orderId && window.Razorpay) {
+    const options = {
+      key: data.key,
+      amount: data.amount,
+      currency: data.currency,
+      name: data.courseTitle,
+      image: data.courseThumbnail,
+      order_id: data.orderId,
+      handler: function (response) {
+        toast.success("Payment successful. Redirecting...");
+        setTimeout(() => {
+          window.location.href = `/course-progress/${courseId}`;
+        }, 1500);
+      },
+      prefill: {
+        name: data.userName || "Student",
+        email: data.userEmail || "",
+      },
+      theme: {
+        color: "#6366f1",
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  }
     if(isError){
       toast.error(error?.data?.message || "Failed to create checkout session")
     }

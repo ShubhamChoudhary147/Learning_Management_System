@@ -1,13 +1,13 @@
 import {User} from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../utils/generateToken.js";
+// import { generateToken } from "../utils/generateToken.js";
+import jwt from "jsonwebtoken";
 import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 
 export const register = async (req,res) => {
     try {
-       
-        const {name, email, password} = req.body; // patel214
-        if(!name || !email || !password){
+        const {name, email, password,role} = req.body;
+        if(!name || !email || !password || !role){
             return res.status(400).json({
                 success:false,
                 message:"All fields are required."
@@ -24,7 +24,8 @@ export const register = async (req,res) => {
         await User.create({
             name,
             email,
-            password:hashedPassword
+            password:hashedPassword,
+            role
         });
         return res.status(201).json({
             success:true,
@@ -40,14 +41,14 @@ export const register = async (req,res) => {
 }
 export const login = async (req,res) => {
     try {
-        const {email, password} = req.body;
-        if(!email || !password){
+        const {email, password,role} = req.body;
+        if(!email || !password || !role){
             return res.status(400).json({
                 success:false,
                 message:"All fields are required."
             })
         }
-        const user = await User.findOne({email});
+        let user = await User.findOne({email});
         if(!user){
             return res.status(400).json({
                 success:false,
@@ -60,8 +61,33 @@ export const login = async (req,res) => {
                 success:false,
                 message:"Incorrect email or password"
             });
+        };
+        // check role is correct or not
+        if (role !== user.role) {
+            return res.status(400).json({
+                message: "Account doesn't exist with current role.",
+                success: false
+            })
+        };
+
+        const tokenData = {
+            userId: user._id
         }
-        generateToken(res, user, `Welcome back ${user.name}`);
+        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
+
+        user = {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        }
+
+        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true,secure: true, sameSite: 'None' }).json({
+            message: `Welcome back ${user.name}`,
+            user,
+            success: true
+        })
+        // generateToken(res, user, `Welcome back ${user.name}`);
 
     } catch (error) {
         console.log(error);

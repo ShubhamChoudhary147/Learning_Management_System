@@ -1,4 +1,3 @@
-// McgPr7oX7v1mMcbN
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   useLoginUserMutation,
@@ -25,8 +25,9 @@ const Login = () => {
     name: "",
     email: "",
     password: "",
+    role: "",
   });
-  const [loginInput, setLoginInput] = useState({ email: "", password: "" });
+  const [loginInput, setLoginInput] = useState({ email: "", password: "",role: "" });
 
   const [
     registerUser,
@@ -109,7 +110,7 @@ const Login = () => {
                   name="name"
                   value={signupInput.name}
                   onChange={(e) => changeInputHandler(e, "signup")}
-                  placeholder="Eg. patel"
+                  placeholder="Eg. Shubham"
                   required="true"
                 />
               </div>
@@ -120,12 +121,12 @@ const Login = () => {
                   name="email"
                   value={signupInput.email}
                   onChange={(e) => changeInputHandler(e, "signup")}
-                  placeholder="Eg. patel@gmail.com"
+                  placeholder="Eg. shm@gmail.com"
                   required="true"
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="username">Password</Label>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   type="password"
                   name="password"
@@ -135,6 +136,33 @@ const Login = () => {
                   required="true"
                 />
               </div>
+              <div className="space-y-1">
+              <Label>Role</Label>
+              <RadioGroup className="flex items-center gap-4 my-2">
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="radio"
+                    name="role"
+                    value="student"
+                    checked={signupInput.role === 'student'}
+                    onChange={(e) => changeInputHandler(e, "signup")}
+                    className="cursor-pointer"
+                  />
+                  <Label htmlFor="student">Student</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="radio"
+                    name="role"
+                    value="instructor"
+                    checked={signupInput.role === 'instructor'}
+                    onChange={(e) => changeInputHandler(e, "signup")}
+                    className="cursor-pointer"
+                  />
+                  <Label htmlFor="instructor">Instructor</Label>
+                </div>
+              </RadioGroup>
+            </div>
             </CardContent>
             <CardFooter>
               <Button
@@ -163,18 +191,18 @@ const Login = () => {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="space-y-1">
-                <Label htmlFor="current">Email</Label>
+                <Label htmlFor="username">Email</Label>
                 <Input
                   type="email"
                   name="email"
                   value={loginInput.email}
                   onChange={(e) => changeInputHandler(e, "login")}
-                  placeholder="Eg. patel@gmail.com"
+                  placeholder="Eg. shm@gmail.com"
                   required="true"
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="new">Password</Label>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   type="password"
                   name="password"
@@ -184,6 +212,33 @@ const Login = () => {
                   required="true"
                 />
               </div>
+               <div className="space-y-1">
+              <Label>Role</Label>
+              <RadioGroup className="flex items-center gap-4 my-2">
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="radio"
+                    name="role"
+                    value="student"
+                    checked={loginInput.role === 'student'}
+                    onChange={(e) => changeInputHandler(e, "login")}
+                    className="cursor-pointer"
+                  />
+                  <Label htmlFor="student">Student</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="radio"
+                    name="role"
+                    value="instructor"
+                    checked={loginInput.role === 'instructor'}
+                    onChange={(e) => changeInputHandler(e, "login")}
+                    className="cursor-pointer"
+                  />
+                  <Label htmlFor="instructor">Instructor</Label>
+                </div>
+              </RadioGroup>
+            </div>
             </CardContent>
             <CardFooter>
               <Button

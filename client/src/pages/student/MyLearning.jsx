@@ -1,9 +1,15 @@
-import React from "react";
 import Course from "./Course";
 import { useLoadUserQuery } from "@/features/api/authApi";
 
 const MyLearning = () => { 
   const {data, isLoading} = useLoadUserQuery();
+  console.log(data);
+  console.log(isLoading);
+  if(data){
+    console.log(data);
+  }else{
+    console.log("No data");
+  }
 
   const myLearning = data?.user.enrolledCourses || [];
   return (
