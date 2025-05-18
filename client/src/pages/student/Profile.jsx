@@ -57,7 +57,7 @@ const Profile = () => {
   useEffect(() => {
     if (isSuccess) {
       refetch();
-      toast.success(data.message || "Profile updated.");
+      toast.success(updateUserData?.message || "Profile updated.");
     }
     if (isError) {
       toast.error(error.message || "Failed to update profile");
@@ -67,8 +67,7 @@ const Profile = () => {
   if (isLoading) return <h1>Profile Loading...</h1>;
 
   const user = data && data.user;
-
-  console.log(user);
+  if (!user) return <h1>User data not available</h1>;
   
 
   return (
