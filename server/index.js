@@ -23,7 +23,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
 const allowedOrigins = [
-  "https://learningcooll.vercel.app/",
+  "https://learningcooll.vercel.app",
   "http://localhost:5173"
 ];
 
